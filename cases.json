@@ -1,0 +1,116 @@
+{
+  "cases": [
+    {
+      "name": "in_order_delivery",
+      "ops": [
+        {"op": "establish", "session": "s1", "tenant": "t1", "conn_gen": 1, "base_seq": 1000},
+        {"op": "key", "session": "s1", "key_gen": 1, "lo": 1000, "hi": 1999},
+        {"op": "recv", "session": "s1", "seq": 1000, "conn_gen": 1, "key_gen": 1, "digest": "d1000"},
+        {"op": "recv", "session": "s1", "seq": 1001, "conn_gen": 1, "key_gen": 1, "digest": "d1001"},
+        {"op": "recv", "session": "s1", "seq": 1002, "conn_gen": 1, "key_gen": 1, "digest": "d1002"}
+      ]
+    },
+    {
+      "name": "out_of_order_contiguous_release",
+      "ops": [
+        {"op": "establish", "session": "s2", "tenant": "t1", "conn_gen": 1, "base_seq": 100},
+        {"op": "key", "session": "s2", "key_gen": 1, "lo": 100, "hi": 999},
+        {"op": "recv", "session": "s2", "seq": 102, "conn_gen": 1, "key_gen": 1, "digest": "d102"},
+        {"op": "recv", "session": "s2", "seq": 104, "conn_gen": 1, "key_gen": 1, "digest": "d104"},
+        {"op": "recv", "session": "s2", "seq": 101, "conn_gen": 1, "key_gen": 1, "digest": "d101"},
+        {"op": "recv", "session": "s2", "seq": 100, "conn_gen": 1, "key_gen": 1, "digest": "d100"},
+        {"op": "recv", "session": "s2", "seq": 103, "conn_gen": 1, "key_gen": 1, "digest": "d103"}
+      ]
+    },
+    {
+      "name": "wrap_65535_to_0",
+      "ops": [
+        {"op": "establish", "session": "s3", "tenant": "t1", "conn_gen": 1, "base_seq": 65534},
+        {"op": "key", "session": "s3", "key_gen": 1, "lo": 65534, "hi": 65540},
+        {"op": "recv", "session": "s3", "seq": 65534, "conn_gen": 1, "key_gen": 1, "digest": "d65534"},
+        {"op": "recv", "session": "s3", "seq": 65535, "conn_gen": 1, "key_gen": 1, "digest": "d65535"},
+        {"op": "recv", "session": "s3", "seq": 0, "conn_gen": 1, "key_gen": 1, "digest": "d65536"},
+        {"op": "recv", "session": "s3", "seq": 1, "conn_gen": 1, "key_gen": 1, "digest": "d65537"}
+      ]
+    },
+    {
+      "name": "window_boundaries",
+      "ops": [
+        {"op": "establish", "session": "s4", "tenant": "t1", "conn_gen": 1, "base_seq": 5000},
+        {"op": "key", "session": "s4", "key_gen": 1, "lo": 5000, "hi": 9999},
+        {"op": "recv", "session": "s4", "seq": 5127, "conn_gen": 1, "key_gen": 1, "digest": "d5127"},
+        {"op": "recv", "session": "s4", "seq": 5128, "conn_gen": 1, "key_gen": 1, "digest": "d5128"},
+        {"op": "recv", "session": "s4", "seq": 4999, "conn_gen": 1, "key_gen": 1, "digest": "d4999"},
+        {"op": "recv", "session": "s4", "seq": 4871, "conn_gen": 1, "key_gen": 1, "digest": "d4871"},
+        {"op": "recv", "session": "s4", "seq": 37768, "conn_gen": 1, "key_gen": 1, "digest": "dHalf"}
+      ]
+    },
+    {
+      "name": "dual_key_overlap_and_conflict",
+      "ops": [
+        {"op": "establish", "session": "s5", "tenant": "t1", "conn_gen": 1, "base_seq": 100},
+        {"op": "key", "session": "s5", "key_gen": 1, "lo": 100, "hi": 199},
+        {"op": "key", "session": "s5", "key_gen": 2, "lo": 150, "hi": 299},
+        {"op": "recv", "session": "s5", "seq": 100, "conn_gen": 1, "key_gen": 1, "digest": "d100"},
+        {"op": "recv", "session": "s5", "seq": 160, "conn_gen": 1, "key_gen": 2, "digest": "d160"},
+        {"op": "recv", "session": "s5", "seq": 160, "conn_gen": 1, "key_gen": 1, "digest": "d160b"},
+        {"op": "recv", "session": "s5", "seq": 160, "conn_gen": 1, "key_gen": 2, "digest": "d160"},
+        {"op": "recv", "session": "s5", "seq": 140, "conn_gen": 1, "key_gen": 2, "digest": "d140"},
+        {"op": "recv", "session": "s5", "seq": 160, "conn_gen": 1, "key_gen": 3, "digest": "d160"}
+      ]
+    },
+    {
+      "name": "revoke_with_missing_predecessor",
+      "ops": [
+        {"op": "establish", "session": "s6", "tenant": "t1", "conn_gen": 1, "base_seq": 200},
+        {"op": "key", "session": "s6", "key_gen": 1, "lo": 200, "hi": 299},
+        {"op": "key", "session": "s6", "key_gen": 2, "lo": 200, "hi": 299},
+        {"op": "recv", "session": "s6", "seq": 200, "conn_gen": 1, "key_gen": 1, "digest": "d200"},
+        {"op": "recv", "session": "s6", "seq": 202, "conn_gen": 1, "key_gen": 1, "digest": "d202"},
+        {"op": "recv", "session": "s6", "seq": 203, "conn_gen": 1, "key_gen": 1, "digest": "d203"},
+        {"op": "recv", "session": "s6", "seq": 205, "conn_gen": 1, "key_gen": 2, "digest": "d205"},
+        {"op": "revoke", "session": "s6", "key_gen": 1},
+        {"op": "recv", "session": "s6", "seq": 201, "conn_gen": 1, "key_gen": 2, "digest": "d201"},
+        {"op": "recv", "session": "s6", "seq": 204, "conn_gen": 1, "key_gen": 2, "digest": "d204"},
+        {"op": "recv", "session": "s6", "seq": 206, "conn_gen": 1, "key_gen": 1, "digest": "d206"},
+        {"op": "recv", "session": "s6", "seq": 202, "conn_gen": 1, "key_gen": 2, "digest": "d202"},
+        {"op": "recv", "session": "s6", "seq": 200, "conn_gen": 1, "key_gen": 1, "digest": "d200"}
+      ]
+    },
+    {
+      "name": "connection_generation_reuse",
+      "ops": [
+        {"op": "establish", "session": "s7", "tenant": "t1", "conn_gen": 1, "base_seq": 1000},
+        {"op": "key", "session": "s7", "key_gen": 1, "lo": 1000, "hi": 1999},
+        {"op": "recv", "session": "s7", "seq": 1000, "conn_gen": 1, "key_gen": 1, "digest": "d1000"},
+        {"op": "establish", "session": "s7", "tenant": "t1", "conn_gen": 2, "base_seq": 5000},
+        {"op": "key", "session": "s7", "key_gen": 1, "lo": 5000, "hi": 5999},
+        {"op": "recv", "session": "s7", "seq": 1001, "conn_gen": 1, "key_gen": 1, "digest": "d1001"},
+        {"op": "establish", "session": "s7", "tenant": "t1", "conn_gen": 1, "base_seq": 1000},
+        {"op": "recv", "session": "s7", "seq": 5000, "conn_gen": 2, "key_gen": 1, "digest": "d5000"}
+      ]
+    },
+    {
+      "name": "invalid_auth_no_enqueue",
+      "ops": [
+        {"op": "establish", "session": "s8", "tenant": "t1", "conn_gen": 1, "base_seq": 300},
+        {"op": "key", "session": "s8", "key_gen": 1, "lo": 300, "hi": 399},
+        {"op": "recv", "session": "s8", "seq": 300, "conn_gen": 1, "key_gen": 1, "digest": "d300", "auth": false},
+        {"op": "recv", "session": "s8", "seq": 301, "conn_gen": 1, "key_gen": 1, "digest": "d301", "auth": false},
+        {"op": "recv", "session": "s8", "seq": 300, "conn_gen": 1, "key_gen": 1, "digest": "d300"}
+      ]
+    },
+    {
+      "name": "receipt_binding_and_duplicates",
+      "ops": [
+        {"op": "establish", "session": "s9", "tenant": "t1", "conn_gen": 1, "base_seq": 700},
+        {"op": "key", "session": "s9", "key_gen": 1, "lo": 700, "hi": 799},
+        {"op": "recv", "session": "s9", "seq": 700, "conn_gen": 1, "key_gen": 1, "digest": "d700"},
+        {"op": "recv", "session": "s9", "seq": 700, "conn_gen": 1, "key_gen": 1, "digest": "d700"},
+        {"op": "recv", "session": "s9", "seq": 702, "conn_gen": 1, "key_gen": 1, "digest": "d702"},
+        {"op": "recv", "session": "s9", "seq": 702, "conn_gen": 1, "key_gen": 1, "digest": "d702"},
+        {"op": "recv", "session": "s9", "seq": 702, "conn_gen": 1, "key_gen": 1, "digest": "d702x"}
+      ]
+    }
+  ]
+}

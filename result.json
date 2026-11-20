@@ -1,0 +1,930 @@
+{
+  "input": "cases.json",
+  "cases": [
+    {
+      "name": "in_order_delivery",
+      "ops": [
+        {
+          "i": 0,
+          "op": "establish",
+          "status": "ok",
+          "session": "s1",
+          "conn_gen": 1,
+          "base_seq": 1000
+        },
+        {
+          "i": 1,
+          "op": "key",
+          "status": "ok",
+          "session": "s1",
+          "key_gen": 1,
+          "lo": 1000,
+          "hi": 1999
+        },
+        {
+          "i": 2,
+          "op": "recv",
+          "status": "delivered",
+          "session": "s1",
+          "abs_seq": 1000,
+          "released": [
+            1000
+          ]
+        },
+        {
+          "i": 3,
+          "op": "recv",
+          "status": "delivered",
+          "session": "s1",
+          "abs_seq": 1001,
+          "released": [
+            1001
+          ]
+        },
+        {
+          "i": 4,
+          "op": "recv",
+          "status": "delivered",
+          "session": "s1",
+          "abs_seq": 1002,
+          "released": [
+            1002
+          ]
+        }
+      ],
+      "sessions": {
+        "s1": {
+          "state": {
+            "session_id": "s1",
+            "tenant": "t1",
+            "conn_gen": 1,
+            "base_seq": 1000,
+            "expected": 1003,
+            "version": 3
+          },
+          "delivered": [
+            {
+              "abs_seq": 1000,
+              "digest": "d1000",
+              "key_gen": 1
+            },
+            {
+              "abs_seq": 1001,
+              "digest": "d1001",
+              "key_gen": 1
+            },
+            {
+              "abs_seq": 1002,
+              "digest": "d1002",
+              "key_gen": 1
+            }
+          ],
+          "gaps": [],
+          "cached": []
+        }
+      }
+    },
+    {
+      "name": "out_of_order_contiguous_release",
+      "ops": [
+        {
+          "i": 0,
+          "op": "establish",
+          "status": "ok",
+          "session": "s2",
+          "conn_gen": 1,
+          "base_seq": 100
+        },
+        {
+          "i": 1,
+          "op": "key",
+          "status": "ok",
+          "session": "s2",
+          "key_gen": 1,
+          "lo": 100,
+          "hi": 999
+        },
+        {
+          "i": 2,
+          "op": "recv",
+          "status": "cached",
+          "session": "s2",
+          "abs_seq": 102,
+          "released": []
+        },
+        {
+          "i": 3,
+          "op": "recv",
+          "status": "cached",
+          "session": "s2",
+          "abs_seq": 104,
+          "released": []
+        },
+        {
+          "i": 4,
+          "op": "recv",
+          "status": "cached",
+          "session": "s2",
+          "abs_seq": 101,
+          "released": []
+        },
+        {
+          "i": 5,
+          "op": "recv",
+          "status": "delivered",
+          "session": "s2",
+          "abs_seq": 100,
+          "released": [
+            100,
+            101,
+            102
+          ]
+        },
+        {
+          "i": 6,
+          "op": "recv",
+          "status": "delivered",
+          "session": "s2",
+          "abs_seq": 103,
+          "released": [
+            103,
+            104
+          ]
+        }
+      ],
+      "sessions": {
+        "s2": {
+          "state": {
+            "session_id": "s2",
+            "tenant": "t1",
+            "conn_gen": 1,
+            "base_seq": 100,
+            "expected": 105,
+            "version": 5
+          },
+          "delivered": [
+            {
+              "abs_seq": 100,
+              "digest": "d100",
+              "key_gen": 1
+            },
+            {
+              "abs_seq": 101,
+              "digest": "d101",
+              "key_gen": 1
+            },
+            {
+              "abs_seq": 102,
+              "digest": "d102",
+              "key_gen": 1
+            },
+            {
+              "abs_seq": 103,
+              "digest": "d103",
+              "key_gen": 1
+            },
+            {
+              "abs_seq": 104,
+              "digest": "d104",
+              "key_gen": 1
+            }
+          ],
+          "gaps": [],
+          "cached": []
+        }
+      }
+    },
+    {
+      "name": "wrap_65535_to_0",
+      "ops": [
+        {
+          "i": 0,
+          "op": "establish",
+          "status": "ok",
+          "session": "s3",
+          "conn_gen": 1,
+          "base_seq": 65534
+        },
+        {
+          "i": 1,
+          "op": "key",
+          "status": "ok",
+          "session": "s3",
+          "key_gen": 1,
+          "lo": 65534,
+          "hi": 65540
+        },
+        {
+          "i": 2,
+          "op": "recv",
+          "status": "delivered",
+          "session": "s3",
+          "abs_seq": 65534,
+          "released": [
+            65534
+          ]
+        },
+        {
+          "i": 3,
+          "op": "recv",
+          "status": "delivered",
+          "session": "s3",
+          "abs_seq": 65535,
+          "released": [
+            65535
+          ]
+        },
+        {
+          "i": 4,
+          "op": "recv",
+          "status": "delivered",
+          "session": "s3",
+          "abs_seq": 65536,
+          "released": [
+            65536
+          ]
+        },
+        {
+          "i": 5,
+          "op": "recv",
+          "status": "delivered",
+          "session": "s3",
+          "abs_seq": 65537,
+          "released": [
+            65537
+          ]
+        }
+      ],
+      "sessions": {
+        "s3": {
+          "state": {
+            "session_id": "s3",
+            "tenant": "t1",
+            "conn_gen": 1,
+            "base_seq": 65534,
+            "expected": 65538,
+            "version": 4
+          },
+          "delivered": [
+            {
+              "abs_seq": 65534,
+              "digest": "d65534",
+              "key_gen": 1
+            },
+            {
+              "abs_seq": 65535,
+              "digest": "d65535",
+              "key_gen": 1
+            },
+            {
+              "abs_seq": 65536,
+              "digest": "d65536",
+              "key_gen": 1
+            },
+            {
+              "abs_seq": 65537,
+              "digest": "d65537",
+              "key_gen": 1
+            }
+          ],
+          "gaps": [],
+          "cached": []
+        }
+      }
+    },
+    {
+      "name": "window_boundaries",
+      "ops": [
+        {
+          "i": 0,
+          "op": "establish",
+          "status": "ok",
+          "session": "s4",
+          "conn_gen": 1,
+          "base_seq": 5000
+        },
+        {
+          "i": 1,
+          "op": "key",
+          "status": "ok",
+          "session": "s4",
+          "key_gen": 1,
+          "lo": 5000,
+          "hi": 9999
+        },
+        {
+          "i": 2,
+          "op": "recv",
+          "status": "cached",
+          "session": "s4",
+          "abs_seq": 5127,
+          "released": []
+        },
+        {
+          "i": 3,
+          "op": "recv",
+          "status": "rejected",
+          "code": 1008,
+          "error": "ERR_WINDOW_RIGHT",
+          "session": "s4"
+        },
+        {
+          "i": 4,
+          "op": "recv",
+          "status": "rejected",
+          "code": 1016,
+          "error": "ERR_NO_RECEIPT",
+          "session": "s4",
+          "abs_seq": 4999
+        },
+        {
+          "i": 5,
+          "op": "recv",
+          "status": "rejected",
+          "code": 1007,
+          "error": "ERR_WINDOW_LEFT",
+          "session": "s4"
+        },
+        {
+          "i": 6,
+          "op": "recv",
+          "status": "rejected",
+          "code": 1006,
+          "error": "ERR_HALF_CYCLE",
+          "session": "s4"
+        }
+      ],
+      "sessions": {
+        "s4": {
+          "state": {
+            "session_id": "s4",
+            "tenant": "t1",
+            "conn_gen": 1,
+            "base_seq": 5000,
+            "expected": 5000,
+            "version": 1
+          },
+          "delivered": [],
+          "gaps": [],
+          "cached": [
+            {
+              "abs_seq": 5127,
+              "digest": "d5127",
+              "key_gen": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "dual_key_overlap_and_conflict",
+      "ops": [
+        {
+          "i": 0,
+          "op": "establish",
+          "status": "ok",
+          "session": "s5",
+          "conn_gen": 1,
+          "base_seq": 100
+        },
+        {
+          "i": 1,
+          "op": "key",
+          "status": "ok",
+          "session": "s5",
+          "key_gen": 1,
+          "lo": 100,
+          "hi": 199
+        },
+        {
+          "i": 2,
+          "op": "key",
+          "status": "ok",
+          "session": "s5",
+          "key_gen": 2,
+          "lo": 150,
+          "hi": 299
+        },
+        {
+          "i": 3,
+          "op": "recv",
+          "status": "delivered",
+          "session": "s5",
+          "abs_seq": 100,
+          "released": [
+            100
+          ]
+        },
+        {
+          "i": 4,
+          "op": "recv",
+          "status": "cached",
+          "session": "s5",
+          "abs_seq": 160,
+          "released": []
+        },
+        {
+          "i": 5,
+          "op": "recv",
+          "status": "rejected",
+          "code": 1012,
+          "error": "ERR_CONFLICT",
+          "session": "s5",
+          "abs_seq": 160
+        },
+        {
+          "i": 6,
+          "op": "recv",
+          "status": "duplicate",
+          "session": "s5",
+          "abs_seq": 160,
+          "digest": "d160",
+          "key_gen": 2,
+          "receipt_state": "cached"
+        },
+        {
+          "i": 7,
+          "op": "recv",
+          "status": "rejected",
+          "code": 1011,
+          "error": "ERR_KEY_INTERVAL",
+          "session": "s5",
+          "abs_seq": 140,
+          "key_gen": 2
+        },
+        {
+          "i": 8,
+          "op": "recv",
+          "status": "rejected",
+          "code": 1012,
+          "error": "ERR_CONFLICT",
+          "session": "s5",
+          "abs_seq": 160
+        }
+      ],
+      "sessions": {
+        "s5": {
+          "state": {
+            "session_id": "s5",
+            "tenant": "t1",
+            "conn_gen": 1,
+            "base_seq": 100,
+            "expected": 101,
+            "version": 2
+          },
+          "delivered": [
+            {
+              "abs_seq": 100,
+              "digest": "d100",
+              "key_gen": 1
+            }
+          ],
+          "gaps": [],
+          "cached": [
+            {
+              "abs_seq": 160,
+              "digest": "d160",
+              "key_gen": 2
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "revoke_with_missing_predecessor",
+      "ops": [
+        {
+          "i": 0,
+          "op": "establish",
+          "status": "ok",
+          "session": "s6",
+          "conn_gen": 1,
+          "base_seq": 200
+        },
+        {
+          "i": 1,
+          "op": "key",
+          "status": "ok",
+          "session": "s6",
+          "key_gen": 1,
+          "lo": 200,
+          "hi": 299
+        },
+        {
+          "i": 2,
+          "op": "key",
+          "status": "ok",
+          "session": "s6",
+          "key_gen": 2,
+          "lo": 200,
+          "hi": 299
+        },
+        {
+          "i": 3,
+          "op": "recv",
+          "status": "delivered",
+          "session": "s6",
+          "abs_seq": 200,
+          "released": [
+            200
+          ]
+        },
+        {
+          "i": 4,
+          "op": "recv",
+          "status": "cached",
+          "session": "s6",
+          "abs_seq": 202,
+          "released": []
+        },
+        {
+          "i": 5,
+          "op": "recv",
+          "status": "cached",
+          "session": "s6",
+          "abs_seq": 203,
+          "released": []
+        },
+        {
+          "i": 6,
+          "op": "recv",
+          "status": "cached",
+          "session": "s6",
+          "abs_seq": 205,
+          "released": []
+        },
+        {
+          "i": 7,
+          "op": "revoke",
+          "status": "ok",
+          "session": "s6",
+          "key_gen": 1,
+          "invalidated": [
+            202,
+            203
+          ],
+          "released": []
+        },
+        {
+          "i": 8,
+          "op": "recv",
+          "status": "delivered",
+          "session": "s6",
+          "abs_seq": 201,
+          "released": [
+            201
+          ]
+        },
+        {
+          "i": 9,
+          "op": "recv",
+          "status": "delivered",
+          "session": "s6",
+          "abs_seq": 204,
+          "released": [
+            204,
+            205
+          ]
+        },
+        {
+          "i": 10,
+          "op": "recv",
+          "status": "rejected",
+          "code": 1010,
+          "error": "ERR_KEY_REVOKED",
+          "session": "s6",
+          "abs_seq": 206,
+          "key_gen": 1
+        },
+        {
+          "i": 11,
+          "op": "recv",
+          "status": "rejected",
+          "code": 1013,
+          "error": "ERR_GAP",
+          "session": "s6",
+          "abs_seq": 202
+        },
+        {
+          "i": 12,
+          "op": "recv",
+          "status": "duplicate",
+          "session": "s6",
+          "abs_seq": 200,
+          "digest": "d200",
+          "key_gen": 1,
+          "receipt_state": "delivered"
+        }
+      ],
+      "sessions": {
+        "s6": {
+          "state": {
+            "session_id": "s6",
+            "tenant": "t1",
+            "conn_gen": 1,
+            "base_seq": 200,
+            "expected": 206,
+            "version": 7
+          },
+          "delivered": [
+            {
+              "abs_seq": 200,
+              "digest": "d200",
+              "key_gen": 1
+            },
+            {
+              "abs_seq": 201,
+              "digest": "d201",
+              "key_gen": 2
+            },
+            {
+              "abs_seq": 204,
+              "digest": "d204",
+              "key_gen": 2
+            },
+            {
+              "abs_seq": 205,
+              "digest": "d205",
+              "key_gen": 2
+            }
+          ],
+          "gaps": [
+            {
+              "abs_seq": 202,
+              "digest": "d202",
+              "key_gen": 1
+            },
+            {
+              "abs_seq": 203,
+              "digest": "d203",
+              "key_gen": 1
+            }
+          ],
+          "cached": []
+        }
+      }
+    },
+    {
+      "name": "connection_generation_reuse",
+      "ops": [
+        {
+          "i": 0,
+          "op": "establish",
+          "status": "ok",
+          "session": "s7",
+          "conn_gen": 1,
+          "base_seq": 1000
+        },
+        {
+          "i": 1,
+          "op": "key",
+          "status": "ok",
+          "session": "s7",
+          "key_gen": 1,
+          "lo": 1000,
+          "hi": 1999
+        },
+        {
+          "i": 2,
+          "op": "recv",
+          "status": "delivered",
+          "session": "s7",
+          "abs_seq": 1000,
+          "released": [
+            1000
+          ]
+        },
+        {
+          "i": 3,
+          "op": "establish",
+          "status": "ok",
+          "session": "s7",
+          "conn_gen": 2,
+          "base_seq": 5000
+        },
+        {
+          "i": 4,
+          "op": "key",
+          "status": "ok",
+          "session": "s7",
+          "key_gen": 1,
+          "lo": 5000,
+          "hi": 5999
+        },
+        {
+          "i": 5,
+          "op": "recv",
+          "status": "rejected",
+          "code": 1003,
+          "error": "ERR_CONN_GEN",
+          "session": "s7",
+          "expected_gen": 2
+        },
+        {
+          "i": 6,
+          "op": "establish",
+          "status": "rejected",
+          "code": 1003,
+          "error": "ERR_CONN_GEN",
+          "session": "s7"
+        },
+        {
+          "i": 7,
+          "op": "recv",
+          "status": "delivered",
+          "session": "s7",
+          "abs_seq": 5000,
+          "released": [
+            5000
+          ]
+        }
+      ],
+      "sessions": {
+        "s7": {
+          "state": {
+            "session_id": "s7",
+            "tenant": "t1",
+            "conn_gen": 2,
+            "base_seq": 5000,
+            "expected": 5001,
+            "version": 1
+          },
+          "delivered": [
+            {
+              "abs_seq": 5000,
+              "digest": "d5000",
+              "key_gen": 1
+            }
+          ],
+          "gaps": [],
+          "cached": []
+        }
+      }
+    },
+    {
+      "name": "invalid_auth_no_enqueue",
+      "ops": [
+        {
+          "i": 0,
+          "op": "establish",
+          "status": "ok",
+          "session": "s8",
+          "conn_gen": 1,
+          "base_seq": 300
+        },
+        {
+          "i": 1,
+          "op": "key",
+          "status": "ok",
+          "session": "s8",
+          "key_gen": 1,
+          "lo": 300,
+          "hi": 399
+        },
+        {
+          "i": 2,
+          "op": "recv",
+          "status": "rejected",
+          "code": 1001,
+          "error": "ERR_AUTH",
+          "session": "s8"
+        },
+        {
+          "i": 3,
+          "op": "recv",
+          "status": "rejected",
+          "code": 1001,
+          "error": "ERR_AUTH",
+          "session": "s8"
+        },
+        {
+          "i": 4,
+          "op": "recv",
+          "status": "delivered",
+          "session": "s8",
+          "abs_seq": 300,
+          "released": [
+            300
+          ]
+        }
+      ],
+      "sessions": {
+        "s8": {
+          "state": {
+            "session_id": "s8",
+            "tenant": "t1",
+            "conn_gen": 1,
+            "base_seq": 300,
+            "expected": 301,
+            "version": 1
+          },
+          "delivered": [
+            {
+              "abs_seq": 300,
+              "digest": "d300",
+              "key_gen": 1
+            }
+          ],
+          "gaps": [],
+          "cached": []
+        }
+      }
+    },
+    {
+      "name": "receipt_binding_and_duplicates",
+      "ops": [
+        {
+          "i": 0,
+          "op": "establish",
+          "status": "ok",
+          "session": "s9",
+          "conn_gen": 1,
+          "base_seq": 700
+        },
+        {
+          "i": 1,
+          "op": "key",
+          "status": "ok",
+          "session": "s9",
+          "key_gen": 1,
+          "lo": 700,
+          "hi": 799
+        },
+        {
+          "i": 2,
+          "op": "recv",
+          "status": "delivered",
+          "session": "s9",
+          "abs_seq": 700,
+          "released": [
+            700
+          ]
+        },
+        {
+          "i": 3,
+          "op": "recv",
+          "status": "duplicate",
+          "session": "s9",
+          "abs_seq": 700,
+          "digest": "d700",
+          "key_gen": 1,
+          "receipt_state": "delivered"
+        },
+        {
+          "i": 4,
+          "op": "recv",
+          "status": "cached",
+          "session": "s9",
+          "abs_seq": 702,
+          "released": []
+        },
+        {
+          "i": 5,
+          "op": "recv",
+          "status": "duplicate",
+          "session": "s9",
+          "abs_seq": 702,
+          "digest": "d702",
+          "key_gen": 1,
+          "receipt_state": "cached"
+        },
+        {
+          "i": 6,
+          "op": "recv",
+          "status": "rejected",
+          "code": 1012,
+          "error": "ERR_CONFLICT",
+          "session": "s9",
+          "abs_seq": 702
+        }
+      ],
+      "sessions": {
+        "s9": {
+          "state": {
+            "session_id": "s9",
+            "tenant": "t1",
+            "conn_gen": 1,
+            "base_seq": 700,
+            "expected": 701,
+            "version": 2
+          },
+          "delivered": [
+            {
+              "abs_seq": 700,
+              "digest": "d700",
+              "key_gen": 1
+            }
+          ],
+          "gaps": [],
+          "cached": [
+            {
+              "abs_seq": 702,
+              "digest": "d702",
+              "key_gen": 1
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
